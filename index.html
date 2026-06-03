@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vessel Performance Monitoring Tool</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>&#x1F6A2; Vessel Performance Monitoring Tool</h1>
+    <p>MV ATLANTIC CARRIER &nbsp;|&nbsp; IMO: 9876543 &nbsp;|&nbsp; Route: Rotterdam &rarr; Singapore</p>
+  </div>
+  <div class="status-badges">
+    <span class="badge badge-green">&#x25CF; Live</span>
+    <span class="badge badge-orange">&#x26A0; Heavy Swell</span>
+    <span class="badge badge-blue">On Route</span>
+  </div>
+</header>
+
+<!-- KPI BAR -->
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="label">Avg Speed</div>
+    <div class="value">12.4 <span class="unit">kn</span></div>
+    <div class="change red">&#x25BC; 1.2 kn vs planned</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Fuel Consumed</div>
+    <div class="value">847 <span class="unit">MT</span></div>
+    <div class="change red">&#x25B2; 12% over budget</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Distance Run</div>
+    <div class="value">6,240 <span class="unit">nm</span></div>
+    <div class="change red">&#x25BC; 180 nm vs plan</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Beaufort Scale</div>
+    <div class="value">6 <span class="unit">BF</span></div>
+    <div class="change orange">&#x25B2; 2 BF above avg</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">ETA Delay</div>
+    <div class="value" style="color:#c0392b;">+18 <span class="unit">hrs</span></div>
+    <div class="change orange">&#x26A0; Laycan at risk</div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- CHART CARD -->
+  <div class="card">
+    <div class="card-header">
+      Daily Performance Chart
+      <div class="tab-bar">
+        <button class="tab active" onclick="showChart('speed',this)">Speed</button>
+        <button class="tab" onclick="showChart('fuel',this)">Fuel</button>
+        <button class="tab" onclick="showChart('rpm',this)">RPM</button>
+        <button class="tab" onclick="showChart('bf',this)">Beaufort</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="position:relative;height:240px;">
+        <canvas id="mainChart" role="img" aria-label="Daily performance chart">Performance data chart.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COL -->
+  <div class="right-col">
+
+    <!-- LAYCAN -->
+    <div class="card">
+      <div class="card-header">&#x23F0; Laycan Window</div>
+      <div class="card-body">
+        <div class="laycan-box">
+          <div class="label" style="font-size:11px;color:#666;">Days to Laycan Close</div>
+          <div class="big">4.2 days</div>
+          <div class="sub">Laycan closes: Jun 07, 06:00 UTC</div>
+          <div class="warn">&#x26A0; ETA delay +18 hrs — Demurrage RISK</div>
+        </div>
+        <div class="speed-needed">
+          Speed needed to make laycan: <span>13.9 kn</span>
+          <div style="font-size:11px;color:#666;margin-top:3px;">Current: 12.4 kn &nbsp;|&nbsp; Gap: 1.5 kn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALTERNATE ROUTES -->
+    <div class="card">
+      <div class="card-header">&#x1F5FA; Alternate Route Options</div>
+      <div class="card-body">
+        <div class="route-item">
+          <div class="route-top">
+            <span class="route-name">Northern Deviation (+40 nm)</span>
+            <span class="rtag rtag-rec">RECOMMENDED</span>
+          </div>
+          <div class="route-detail green">Avoids Bf 7 zone &bull; Saves 2.1 MT fuel &bull; -4 hr delay</div>
+        </div>
+        <div class="route-item">
+          <div class="route-top">
+            <span class="route-name">Direct Route (Current)</span>
+            <span class="rtag rtag-act">ACTIVE</span>
+          </div>
+          <div class="route-detail orange">Heavy swell next 36h &bull; Speed loss risk</div>
+        </div>
+        <div class="route-item">
+          <div class="route-top">
+            <span class="route-name">Southern Passage (+95 nm)</span>
+            <span class="rtag rtag-opt">OPTION</span>
+          </div>
+          <div class="route-detail red">Clear weather &bull; +8 hrs ETA — not advised</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM GRID -->
+<div class="bottom-grid">
+
+  <!-- WEATHER IMPACT TABLE -->
+  <div class="card">
+    <div class="card-header">&#x26C8; Weather Impact Analysis (Noon Report Data)</div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Wind (BF)</th><th>Swell (m)</th>
+            <th>Speed Loss</th><th>Extra Fuel</th><th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>May 25</td><td>3</td><td>1.2</td><td class="green">-0.2 kn</td><td class="green">+0.4 MT</td><td><span class="imp imp-low">LOW</span></td></tr>
+          <tr><td>May 26</td><td>4</td><td>1.8</td><td class="green">-0.5 kn</td><td class="green">+1.1 MT</td><td><span class="imp imp-low">MILD</span></td></tr>
+          <tr><td>May 27</td><td>5</td><td>2.4</td><td class="orange">-1.1 kn</td><td class="orange">+3.2 MT</td><td><span class="imp imp-mod">MODERATE</span></td></tr>
+          <tr><td>May 28</td><td>6</td><td>3.1</td><td class="orange">-1.8 kn</td><td class="orange">+5.7 MT</td><td><span class="imp imp-mod">HIGH</span></td></tr>
+          <tr><td>May 29</td><td>7</td><td>3.8</td><td class="red">-2.4 kn</td><td class="red">+8.9 MT</td><td><span class="imp imp-severe">SEVERE</span></td></tr>
+          <tr><td>May 30</td><td>6</td><td>3.2</td><td class="orange">-1.6 kn</td><td class="orange">+5.1 MT</td><td><span class="imp imp-mod">HIGH</span></td></tr>
+          <tr><td>May 31</td><td>4</td><td>2.0</td><td class="green">-0.7 kn</td><td class="green">+1.8 MT</td><td><span class="imp imp-low">MILD</span></td></tr>
+          <tr><td>Jun 01</td><td>3</td><td>1.5</td><td class="green">-0.3 kn</td><td class="green">+0.6 MT</td><td><span class="imp imp-low">LOW</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- SUMMARY -->
+    <div class="card">
+      <div class="card-header">&#x1F4CB; Voyage Performance Summary</div>
+      <div class="card-body">
+        <div class="summary-row"><span class="key">Total voyage days</span><span class="val">18.4 days</span></div>
+        <div class="summary-row"><span class="key">Planned fuel budget</span><span class="val">756 MT</span></div>
+        <div class="summary-row"><span class="key">Actual fuel consumed</span><span class="val-warn">847 MT</span></div>
+        <div class="summary-row"><span class="key">Weather excess fuel</span><span class="val-warn">+91 MT (+12%)</span></div>
+        <div class="summary-row"><span class="key">Speed efficiency</span><span class="val-warn">87.3%</span></div>
+        <div class="summary-row"><span class="key">CII Rating (projected)</span><span class="val-warn">C (target: B)</span></div>
+        <div class="summary-row"><span class="key">Demurrage exposure</span><span class="val-warn">~$24,000 USD</span></div>
+        <div class="summary-row"><span class="key">Fuel cost excess</span><span class="val-warn">~$54,600 USD</span></div>
+      </div>
+    </div>
+
+    <!-- FUEL PENALTY BARS -->
+    <div class="card">
+      <div class="card-header">&#x26FD; Fuel Penalty by Beaufort Level</div>
+      <div class="card-body">
+        <div class="fuel-bar-wrap">
+          <div class="fuel-bar-top"><span>Beaufort 3</span><span class="green">+0.4 MT/day</span></div>
+          <div class="fuel-bar-bg"><div class="fuel-bar-fill" style="width:4%;background:#1e7e34;"></div></div>
+        </div>
+        <div class="fuel-bar-wrap">
+          <div class="fuel-bar-top"><span>Beaufort 4</span><span class="green">+1.1 MT/day</span></div>
+          <div class="fuel-bar-bg"><div class="fuel-bar-fill" style="width:12%;background:#1e7e34;"></div></div>
+        </div>
+        <div class="fuel-bar-wrap">
+          <div class="fuel-bar-top"><span>Beaufort 5</span><span class="orange">+3.2 MT/day</span></div>
+          <div class="fuel-bar-bg"><div class="fuel-bar-fill" style="width:36%;background:#e65c00;"></div></div>
+        </div>
+        <div class="fuel-bar-wrap">
+          <div class="fuel-bar-top"><span>Beaufort 6</span><span class="orange">+5.7 MT/day</span></div>
+          <div class="fuel-bar-bg"><div class="fuel-bar-fill" style="width:64%;background:#e65c00;"></div></div>
+        </div>
+        <div class="fuel-bar-wrap">
+          <div class="fuel-bar-top"><span>Beaufort 7</span><span class="red">+8.9 MT/day</span></div>
+          <div class="fuel-bar-bg"><div class="fuel-bar-fill" style="width:100%;background:#c0392b;"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Vessel Performance Monitoring Tool &nbsp;|&nbsp; IME Innovation Challenge 2026 &nbsp;|&nbsp; TBI-GEU
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
